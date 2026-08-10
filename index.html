@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Ударник — ЕГЭ Задание 4</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23fbbf24'/%3E%3Cstop offset='100%25' style='stop-color:%23b45309'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Ctext x='50' y='70' font-size='56' text-anchor='middle' fill='%23fff' font-family='Georgia, serif' font-weight='700'%3EѸ%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230d0d0d'/%3E%3Ccircle cx='25' cy='35' r='40' fill='%23a78bfa' opacity='0.35'/%3E%3Ccircle cx='80' cy='55' r='35' fill='%23f472b6' opacity='0.3'/%3E%3Ccircle cx='40' cy='85' r='30' fill='%2360a5fa' opacity='0.3'/%3E%3Ctext x='50' y='70' font-size='56' text-anchor='middle' fill='%23f5f5f7' font-family='Georgia, serif' font-weight='700'%3EУ%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Old+Standard+TT:wght@400;700&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,10 +28,13 @@
     .ege-back:hover, .ege-card:hover, .ege-dict-item:hover, .ege-filter:hover, .ege-leader-item:hover { background: #222; }
     .ege-leader-me { background: #2e1a05 !important; border-color: #f59e0b !important; }
   }
-  .ege-app { max-width: 520px; margin: 0 auto; padding: 16px; min-height: 100dvh; position: relative; }
+  .ege-app { max-width: 520px; margin: 0 auto; padding: 24px 16px 16px; min-height: 100dvh; position: relative; }
   .ege-app button, .ege-app input { font: inherit; }
-  .ege-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; gap: 8px; }
-  .ege-header h1 { font-size: 22px; font-weight: 700; letter-spacing: 0; flex: 1; text-align: center; font-family: 'Playfair Display', Georgia, serif; }
+  .ege-header { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin-bottom: 20px; gap: 8px; }
+  .ege-header > :nth-child(1) { justify-self: start; }
+  .ege-header > :nth-child(2) { justify-self: center; }
+  .ege-header > :nth-child(3) { justify-self: end; }
+  .ege-header h1 { font-size: 22px; font-weight: 700; letter-spacing: 0; text-align: center; margin: 0; }
   .ege-back { background: none; border: none; color: #666; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 4px; padding: 6px 10px; border-radius: 8px; transition: background .15s; white-space: nowrap; }
   .ege-back:hover { background: rgba(0,0,0,0.05); }
   .ege-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -39,7 +42,8 @@
   .ege-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.08); border-color: #111; }
   .ege-card::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); transition: left 0.5s; }
   .ege-card:hover::after { left: 100%; }
-  .ege-card-icon { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px; line-height: 1; transition: transform .2s, filter .2s; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.08)); text-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .ege-card-icon { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px; transition: transform .2s, filter .2s; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.08)); text-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .ege-card-icon span { display: flex; align-items: center; justify-content: center; height: 100%; width: 100%; }
   .ege-card:hover .ege-card-icon { transform: scale(1.15) rotate(-4deg); filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12)); }
   .ege-card-icon.train { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
   .ege-card-icon.test { background: linear-gradient(135deg, #93c5fd, #60a5fa); }
@@ -181,8 +185,10 @@
   .ege-smart-count { text-align:center; font-size:13px; color:#888; margin-bottom:16px; }
   .ege-smart-count b { color: #111; font-weight:600; }
   @media (prefers-color-scheme: dark) { .ege-smart-count b { color: #f5f5f7; } }
-  .ege-app-icon { width: 72px; height: 72px; border-radius: 20px; background: linear-gradient(135deg, #fbbf24, #b45309); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: 0 8px 24px rgba(180, 83, 9, 0.35); }
-  .ege-app-icon svg { width: 44px; height: 44px; }
+  .ege-app-icon { width: 72px; height: 72px; border-radius: 20px; background: #f5f5f7; margin: 0 auto 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); position: relative; overflow: hidden; }
+  .ege-app-icon svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+  .ege-app-icon .icon-letter { position: absolute; z-index: 1; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Old Standard TT', Georgia, 'Times New Roman', serif; font-size: 40px; font-weight: 700; color: #111; line-height: 1; }
+  @media (prefers-color-scheme: dark) { .ege-app-icon { background: #0d0d0d; box-shadow: 0 8px 24px rgba(0,0,0,0.4); } .ege-app-icon .icon-letter { color: #f5f5f7; } }
 </style>
 <base target="_blank">
 <base target="_blank">
@@ -197,22 +203,24 @@
   <!-- HOME -->
   <div class="ege-screen active" id="screenHome">
     <div class="ege-header">
-      <span></span>
+      <span style="width:40px;display:inline-block"></span>
       <h1>Ударник</h1>
-      <span style="width:40px"></span>
+      <span style="width:40px;display:inline-block"></span>
     </div>
-    <div style="text-align:center;margin-bottom:20px">
+    <div style="text-align:center;margin-bottom:20px;display:flex;flex-direction:column;align-items:center">
       <div class="ege-app-icon">
         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <linearGradient id="iconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
-              <stop offset="100%" style="stop-color:#b45309;stop-opacity:1" />
-            </linearGradient>
+            <filter id="iconBlur" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="16"/>
+            </filter>
           </defs>
-          <rect width="100" height="100" rx="22" fill="url(#iconGrad)"/>
-          <text x="50" y="70" font-size="56" text-anchor="middle" fill="#fff" font-family="'Old Standard TT', Georgia, serif" font-weight="700">Ѹ</text>
+          <circle cx="20" cy="30" r="45" fill="#a78bfa" filter="url(#iconBlur)" opacity="0.5"/>
+          <circle cx="85" cy="50" r="40" fill="#f472b6" filter="url(#iconBlur)" opacity="0.45"/>
+          <circle cx="35" cy="85" r="35" fill="#60a5fa" filter="url(#iconBlur)" opacity="0.45"/>
+          <circle cx="65" cy="15" r="30" fill="#34d399" filter="url(#iconBlur)" opacity="0.4"/>
         </svg>
+        <span class="icon-letter">У</span>
       </div>
       <p style="font-size:14px;color:#888;line-height:1.5">Тренажёр ударений · <span id="totalWordsCount">0</span> слов</p>
     </div>
@@ -237,16 +245,8 @@
         <div class="ege-card-title">Статистика</div>
         <div class="ege-card-desc">Прогресс и ошибки</div>
       </div>
-      <div class="ege-card" onclick="goLeaderboard()">
-        <div class="ege-card-icon lead"><span>🏆</span></div>
-        <div class="ege-card-title">Топ игроков</div>
-        <div class="ege-card-desc">Таблица лидеров</div>
-      </div>
-      <div class="ege-card" onclick="requestNotifications()">
-        <div class="ege-card-icon auth"><span>🔔</span></div>
-        <div class="ege-card-title">Напоминания</div>
-        <div class="ege-card-desc">Включить уведомления</div>
-      </div>
+
+
     </div>
     <div class="ege-ad-box ege-ad-native" id="homeAd">
       <div class="ege-ad-label">Реклама</div>
