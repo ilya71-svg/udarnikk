@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+<head>
 <meta name="yandex-verification" content="9c3afbdd5c1bbc75" />
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -319,22 +320,22 @@
       Тренажёр ударений по орфоэпическому словарю ФИПИ · 190 слов
     </p>
     <div class="ege-grid">
-      <div class="ege-card" onclick="goModes()">
+      <div class="ege-card" data-action="modes">
         <div class="ege-card-icon mode"><span>🎮</span></div>
         <div class="ege-card-title">Режимы</div>
         <div class="ege-card-desc">Битва и умное повторение</div>
       </div>
-      <div class="ege-card" onclick="goTest()">
+      <div class="ege-card" data-action="test">
         <div class="ege-card-icon test"><span>📝</span></div>
         <div class="ege-card-title">Экзамен</div>
         <div class="ege-card-desc">10 слов — проверь себя</div>
       </div>
-      <div class="ege-card" onclick="goDict()">
+      <div class="ege-card" data-action="dict">
         <div class="ege-card-icon dict"><span>📖</span></div>
         <div class="ege-card-title">Словарь</div>
         <div class="ege-card-desc">Все слова с ударениями</div>
       </div>
-      <div class="ege-card" onclick="goStats()">
+      <div class="ege-card" data-action="stats">
         <div class="ege-card-icon stat"><span>📊</span></div>
         <div class="ege-card-title">Статистика</div>
         <div class="ege-card-desc">Прогресс и ошибки</div>
@@ -345,7 +346,7 @@
   <!-- TRAINING -->
   <div class="ege-screen" id="screenTrain">
     <div class="ege-header">
-      <button class="ege-back" onclick="goHome()">← Назад</button>
+      <button class="ege-back" data-action="home">← Назад</button>
       <h1>Тренировка</h1>
       <span style="width:60px"></span>
     </div>
@@ -360,14 +361,14 @@
     </div>
     <div class="ege-feedback" id="trainFeedback"></div>
     <div id="trainControls">
-      <button class="ege-btn primary" id="trainNextBtn" onclick="nextTrain()" style="display:none">Следующее слово</button>
+      <button class="ege-btn primary" id="trainNextBtn" data-action="nextTrain" style="display:none">Следующее слово</button>
     </div>
   </div>
 
   <!-- TEST -->
   <div class="ege-screen" id="screenTest">
     <div class="ege-header">
-      <button class="ege-back" onclick="goHome()">← Назад</button>
+      <button class="ege-back" data-action="home">← Назад</button>
       <h1>Экзамен</h1>
       <span style="width:60px"></span>
     </div>
@@ -382,14 +383,14 @@
     </div>
     <div class="ege-feedback" id="testFeedback"></div>
     <div id="testControls">
-      <button class="ege-btn primary" id="testNextBtn" onclick="nextTest()" style="display:none">Далее</button>
+      <button class="ege-btn primary" id="testNextBtn" data-action="nextTest" style="display:none">Далее</button>
     </div>
   </div>
 
   <!-- TEST RESULT -->
   <div class="ege-screen" id="screenResult">
     <div class="ege-header">
-      <button class="ege-back" onclick="goHome()">← На главную</button>
+      <button class="ege-back" data-action="home">← На главную</button>
       <h1>Результат</h1>
       <span style="width:60px"></span>
     </div>
@@ -400,15 +401,15 @@
         <div class="ege-result-item"><div class="num" id="resultCorrect" style="color:#2e7d32">0</div><div class="lbl">правильно</div></div>
         <div class="ege-result-item"><div class="num" id="resultWrong" style="color:#c62828">0</div><div class="lbl">ошибок</div></div>
       </div>
-      <button class="ege-btn primary" onclick="goTest()">Пройти ещё раз</button>
-      <button class="ege-btn" onclick="goHome()">На главную</button>
+      <button class="ege-btn primary" data-action="test">Пройти ещё раз</button>
+      <button class="ege-btn" data-action="home">На главную</button>
     </div>
   </div>
 
   <!-- DICTIONARY -->
   <div class="ege-screen" id="screenDict">
     <div class="ege-header">
-      <button class="ege-back" onclick="goHome()">← Назад</button>
+      <button class="ege-back" data-action="home">← Назад</button>
       <h1>Словарь</h1>
       <span style="width:60px"></span>
     </div>
@@ -420,7 +421,7 @@
   <!-- STATS -->
   <div class="ege-screen" id="screenStats">
     <div class="ege-header">
-      <button class="ege-back" onclick="goHome()">← Назад</button>
+      <button class="ege-back" data-action="home">← Назад</button>
       <h1>Статистика</h1>
       <span style="width:60px"></span>
     </div>
@@ -436,27 +437,27 @@
   <!-- MODES -->
   <div class="ege-screen" id="screenModes">
     <div class="ege-header">
-      <button class="ege-back" onclick="goHome()">← Назад</button>
+      <button class="ege-back" data-action="home">← Назад</button>
       <h1>Режимы</h1>
       <span style="width:60px"></span>
     </div>
     <div class="ege-grid">
-      <div class="ege-card" onclick="goTrain()">
+      <div class="ege-card" data-action="train">
         <div class="ege-card-icon train"><span>🎯</span></div>
         <div class="ege-card-title">Тренировка</div>
         <div class="ege-card-desc">Учись в своём темпе</div>
       </div>
-      <div class="ege-card" onclick="goBattle()">
+      <div class="ege-card" data-action="battle">
         <div class="ege-card-icon train"><span>⚔️</span></div>
         <div class="ege-card-title">Битва за 5</div>
         <div class="ege-card-desc">1 на 1 на одном телефоне</div>
       </div>
-      <div class="ege-card" onclick="goSmart()">
+      <div class="ege-card" data-action="smart">
         <div class="ege-card-icon dict"><span>🧠</span></div>
         <div class="ege-card-title">Умное повторение</div>
         <div class="ege-card-desc">Забываешь? Мы напомним</div>
       </div>
-      <div class="ege-card" onclick="goMarathon()">
+      <div class="ege-card" data-action="marathon">
         <div class="ege-card-icon meme"><span>🎭</span></div>
         <div class="ege-card-title">Марафон</div>
         <div class="ege-card-desc">30 дней — выучи все слова</div>
@@ -467,7 +468,7 @@
   <!-- MARATHON -->
   <div class="ege-screen" id="screenMeme">
     <div class="ege-header">
-      <button class="ege-back" onclick="goHome()">← Назад</button>
+      <button class="ege-back" data-action="home">← Назад</button>
       <h1>Марафон</h1>
       <span style="width:60px"></span>
     </div>
@@ -488,7 +489,7 @@
     </div>
     <div class="ege-feedback" id="marathonFeedback"></div>
     <div id="marathonControls">
-      <button class="ege-btn primary" id="marathonNextBtn" onclick="nextMarathon()" style="display:none">Далее</button>
+      <button class="ege-btn primary" id="marathonNextBtn" data-action="nextMarathon" style="display:none">Далее</button>
     </div>
     <div id="marathonBadges" style="margin-top:16px;text-align:center"></div>
   </div>
@@ -496,7 +497,7 @@
   <!-- BATTLE -->
   <div class="ege-screen" id="screenBattle">
     <div class="ege-header">
-      <button class="ege-back" onclick="goHome()">← Назад</button>
+      <button class="ege-back" data-action="home">← Назад</button>
       <h1>Битва за 5</h1>
       <span style="width:60px"></span>
     </div>
@@ -505,7 +506,7 @@
         <div style="font-size:52px;margin-bottom:16px">⚔️</div>
         <div style="font-size:18px;font-weight:600;margin-bottom:8px">1 на 1 на одном телефоне</div>
         <div style="font-size:14px;color:#888;margin-bottom:24px;line-height:1.5">5 слов по очереди.<br>Кто наберёт больше баллов?</div>
-        <button class="ege-btn primary" onclick="startBattle()">Начать битву</button>
+        <button class="ege-btn primary" data-action="startBattle">Начать битву</button>
       </div>
     </div>
     <div id="battlePlay" style="display:none">
@@ -520,7 +521,7 @@
         <div class="ege-category-tag" id="battleCat"></div>
       </div>
       <div class="ege-feedback" id="battleFeedback"></div>
-      <button class="ege-btn primary" id="battleNextBtn" onclick="nextBattle()" style="display:none">Далее</button>
+      <button class="ege-btn primary" id="battleNextBtn" data-action="nextBattle" style="display:none">Далее</button>
     </div>
     <div id="battleResult" style="display:none">
       <div class="ege-result">
@@ -531,8 +532,8 @@
           <div class="ege-result-item"><div class="num p1" id="battleFinal1" style="color:#3b82f6">0</div><div class="lbl">Игрок 1</div></div>
           <div class="ege-result-item"><div class="num p2" id="battleFinal2" style="color:#ef4444">0</div><div class="lbl">Игрок 2</div></div>
         </div>
-        <button class="ege-btn primary" onclick="startBattle()">Сыграть ещё</button>
-        <button class="ege-btn" onclick="goHome()">На главную</button>
+        <button class="ege-btn primary" data-action="startBattle">Сыграть ещё</button>
+        <button class="ege-btn" data-action="home">На главную</button>
       </div>
     </div>
   </div>
@@ -540,7 +541,7 @@
   <!-- SMART REPETITION -->
   <div class="ege-screen" id="screenSmart">
     <div class="ege-header">
-      <button class="ege-back" onclick="goHome()">← Назад</button>
+      <button class="ege-back" data-action="home">← Назад</button>
       <h1>Умное повторение</h1>
       <span style="width:60px"></span>
     </div>
@@ -568,14 +569,14 @@
         <div class="ege-category-tag" id="smartCat"></div>
       </div>
       <div class="ege-feedback" id="smartFeedback"></div>
-      <button class="ege-btn primary" id="smartNextBtn" onclick="nextSmart()" style="display:none">Далее</button>
+      <button class="ege-btn primary" id="smartNextBtn" data-action="nextSmart" style="display:none">Далее</button>
     </div>
     <div id="smartEmpty" style="display:none;text-align:center;padding:48px 20px">
       <div style="font-size:52px;margin-bottom:16px">🎉</div>
       <div style="font-size:18px;font-weight:600;margin-bottom:8px">Всё выучено!</div>
       <div style="font-size:14px;color:#888;margin-bottom:8px;line-height:1.5" id="smartEmptyText">Следующее повторение позже</div>
       <div class="ege-smart-progress" id="smartEmptyProgress" style="margin:16px 0"></div>
-      <button class="ege-btn" onclick="goHome()">На главную</button>
+      <button class="ege-btn" data-action="home">На главную</button>
     </div>
   </div>
 
@@ -674,15 +675,15 @@ const wordsData = [{"word":"аэропОрты","clean":"аэропорты","st
     document.querySelectorAll('.ege-screen').forEach(el => el.classList.remove('active'));
     document.getElementById(id).classList.add('active');
   }
-  window.goHome = () => showScreen('screenHome');
-  window.goTrain = () => { initTrain(); showScreen('screenTrain'); };
-  window.goTest = () => { initTest(); showScreen('screenTest'); };
-  window.goDict = () => { renderDict(); showScreen('screenDict'); };
-  window.goStats = () => { renderStats(); showScreen('screenStats'); };
-  window.goModes = () => showScreen('screenModes');
-  window.goBattle = () => { initBattle(); showScreen('screenBattle'); };
-  window.goSmart = () => { initSmartIntro(); showScreen('screenSmart'); };
-  window.goMarathon = () => { initMarathon(); showScreen('screenMeme'); };
+  function goHome() => showScreen('screenHome');
+  function goTrain() => { initTrain(); showScreen('screenTrain'); };
+  function goTest() => { initTest(); showScreen('screenTest'); };
+  function goDict() => { renderDict(); showScreen('screenDict'); };
+  function goStats() => { renderStats(); showScreen('screenStats'); };
+  function goModes() => showScreen('screenModes');
+  function goBattle() => { initBattle(); showScreen('screenBattle'); };
+  function goSmart() => { initSmartIntro(); showScreen('screenSmart'); };
+  function goMarathon() => { initMarathon(); showScreen('screenMeme'); };
 
   function shuffle(arr) {
     const a = arr.slice();
@@ -789,7 +790,7 @@ const wordsData = [{"word":"аэропОрты","clean":"аэропорты","st
     }
     updateStreak('trainStreak', 'trainStreakNum', trainStreak);
   }
-  window.nextTrain = () => {
+  function nextTrain() => {
     trainIndex++;
     if (trainIndex >= trainQueue.length) trainIndex = 0;
     renderTrain();
@@ -839,7 +840,7 @@ const wordsData = [{"word":"аэропОрты","clean":"аэропорты","st
     }
     updateStreak('testStreak', 'testStreakNum', testStreak);
   }
-  window.nextTest = () => {
+  function nextTest() => {
     testIndex++;
     if (testIndex >= testQueue.length) {
       const s = loadStats(); s.tests++; saveStats(s);
@@ -975,7 +976,7 @@ const wordsData = [{"word":"аэропОрты","clean":"аэропорты","st
     }
     document.getElementById('marathonNextBtn').style.display = 'block';
   }
-  window.nextMarathon = () => {
+  function nextMarathon() => {
     const m = loadMarathon();
     const today = getToday();
     m.history[today] = (m.history[today] || 0) + 1;
@@ -1012,7 +1013,7 @@ const wordsData = [{"word":"аэропОрты","clean":"аэропорты","st
     document.getElementById('battlePlay').style.display = 'none';
     document.getElementById('battleResult').style.display = 'none';
   }
-  window.startBattle = () => {
+  function startBattle() => {
     battleQueue = shuffle(wordsData).slice(0, BATTLE_TOTAL);
     battleIndex = 0; battleScores = [0,0]; battlePlayer = 1; battleAnswered = false;
     document.getElementById('battleStart').style.display = 'none';
@@ -1050,7 +1051,7 @@ const wordsData = [{"word":"аэропОрты","clean":"аэропорты","st
     }
     document.getElementById('battleNextBtn').style.display = 'block';
   }
-  window.nextBattle = () => {
+  function nextBattle() => {
     battleIndex++;
     if (battleIndex >= BATTLE_TOTAL) {
       showBattleResult();
@@ -1217,7 +1218,7 @@ const wordsData = [{"word":"аэропОрты","clean":"аэропорты","st
     renderSmartPlayCount();
     document.getElementById('smartNextBtn').style.display = 'block';
   }
-  window.nextSmart = () => {
+  function nextSmart() => {
     smartIndex++;
     if (smartIndex >= smartQueue.length) {
       document.getElementById('smartPlay').style.display = 'none';
@@ -1297,6 +1298,32 @@ const wordsData = [{"word":"аэропОрты","clean":"аэропорты","st
     });
   }
 
+
+/* === ИНИЦИАЛИЗАЦИЯ ОБРАБОТЧИКОВ === */
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('[data-action]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var action = el.getAttribute('data-action');
+      switch(action) {
+        case 'home': goHome(); break;
+        case 'train': goTrain(); break;
+        case 'test': goTest(); break;
+        case 'dict': goDict(); break;
+        case 'stats': goStats(); break;
+        case 'modes': goModes(); break;
+        case 'battle': goBattle(); break;
+        case 'smart': goSmart(); break;
+        case 'marathon': goMarathon(); break;
+        case 'nextTrain': nextTrain(); break;
+        case 'nextTest': nextTest(); break;
+        case 'nextMarathon': nextMarathon(); break;
+        case 'nextBattle': nextBattle(); break;
+        case 'nextSmart': nextSmart(); break;
+        case 'startBattle': startBattle(); break;
+      }
+    });
+  });
+});
 console.log('Udarink script loaded successfully');
 
 </script>
