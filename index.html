@@ -26,3 +26,578 @@ window.addEventListener('load', function() {
 <title>Ударник — ЕГЭ Задание 4</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: #f5f5f7;
+    color: #111;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { background: #0d0d0d; color: #f5f5f7; }
+    .ege-card, .ege-word-box, .ege-dict-item, .ege-mistake-item, .ege-stat-box, .ege-search, .ege-filter, .ege-btn { background: #1a1a1a; border-color: rgba(255,255,255,0.08); color: #f5f5f7; }
+    .ege-search::placeholder { color: #666; }
+    .ege-card-desc, .ege-dict-cat, .ege-mistake-count, .ege-result-label, .ege-progress-text, .ege-empty-state, .ege-dict-empty { color: #888; }
+    .ege-category-tag, .ege-stat-box .lbl { background: #222; color: #888; }
+    .ege-back:hover, .ege-card:hover, .ege-dict-item:hover, .ege-filter:hover { background: #222; }
+  }
+  .ege-app { max-width: 520px; margin: 0 auto; padding: 16px; min-height: 100dvh; }
+  .ege-app-icon { width: 72px; height: 72px; border-radius: 20px; background: #f5f5f7; margin: 0 auto 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); position: relative; overflow: hidden; }
+  .ege-app-icon svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+  .ege-app-icon .icon-letter { position: absolute; z-index: 1; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: Georgia, 'Times New Roman', serif; font-size: 44px; font-weight: 700; background: linear-gradient(135deg, #6366f1, #ec4899, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; filter: drop-shadow(0 2px 6px rgba(99,102,241,0.25)); }
+  @media (prefers-color-scheme: dark) { .ege-app-icon .icon-letter { background: linear-gradient(135deg, #a5b4fc, #f9a8d4, #c4b5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 2px 6px rgba(165,180,252,0.3)); } }
+  @media (prefers-color-scheme: dark) { .ege-app-icon { background: #0d0d0d; box-shadow: 0 8px 24px rgba(0,0,0,0.4); } .ege-app-icon .icon-letter { color: #f5f5f7; } }
+  .ege-app button, .ege-app input { font: inherit; }
+  .ege-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; gap: 8px; }
+  .ege-header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; flex: 1; text-align: center; }
+  .ege-back { background: none; border: none; color: #666; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 4px; padding: 6px 10px; border-radius: 8px; transition: background .15s; white-space: nowrap; }
+  .ege-back:hover { background: rgba(0,0,0,0.05); }
+  .ege-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .ege-card { background: #fff; border: 1px solid rgba(0,0,0,0.06); border-radius: 20px; padding: 34px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03); text-align: center; cursor: pointer; transition: all .15s; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .ege-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.08); border-color: #111; }
+  .ege-card-icon {
+    width: 54px; height: 54px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; background: rgba(255,255,255,0.5); border: 2px solid;
+    transition: transform .2s, background .15s, filter .2s, box-shadow .15s;
+    backdrop-filter: blur(4px);
+  }
+  
+  .ege-card:hover .ege-card-icon { transform: scale(1.15) rotate(-4deg); filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12)); }
+  .ege-card-icon.train { border-color: #f59e0b; }
+  .ege-card-icon.test { border-color: #3b82f6; }
+  .ege-card-icon.dict { border-color: #a855f7; }
+  .ege-card-icon.stat { border-color: #ef4444; }
+  .ege-card-icon.mode { border-color: #10b981; }
+  .ege-card-icon.meme { border-color: #ec4899; }
+  .ege-card:hover .ege-card-icon.train { background: rgba(245,158,11,0.12); box-shadow: 0 0 16px rgba(245,158,11,0.15); }
+  .ege-card:hover .ege-card-icon.test { background: rgba(59,130,246,0.12); box-shadow: 0 0 16px rgba(59,130,246,0.15); }
+  .ege-card:hover .ege-card-icon.dict { background: rgba(168,85,247,0.12); box-shadow: 0 0 16px rgba(168,85,247,0.15); }
+  .ege-card:hover .ege-card-icon.stat { background: rgba(239,68,68,0.12); box-shadow: 0 0 16px rgba(239,68,68,0.15); }
+  .ege-card:hover .ege-card-icon.mode { background: rgba(16,185,129,0.12); box-shadow: 0 0 16px rgba(16,185,129,0.15); }
+  .ege-card:hover .ege-card-icon.meme { background: rgba(236,72,153,0.12); box-shadow: 0 0 16px rgba(236,72,153,0.15); }
+  @media (prefers-color-scheme: dark) {
+    .ege-card-icon { background: rgba(255,255,255,0.04); }
+    .ege-card:hover .ege-card-icon.train { background: rgba(245,158,11,0.18); box-shadow: 0 0 16px rgba(245,158,11,0.2); }
+    .ege-card:hover .ege-card-icon.test { background: rgba(59,130,246,0.18); box-shadow: 0 0 16px rgba(59,130,246,0.2); }
+    .ege-card:hover .ege-card-icon.dict { background: rgba(168,85,247,0.18); box-shadow: 0 0 16px rgba(168,85,247,0.2); }
+    .ege-card:hover .ege-card-icon.stat { background: rgba(239,68,68,0.18); box-shadow: 0 0 16px rgba(239,68,68,0.2); }
+    .ege-card:hover .ege-card-icon.mode { background: rgba(16,185,129,0.18); box-shadow: 0 0 16px rgba(16,185,129,0.2); }
+    .ege-card:hover .ege-card-icon.meme { background: rgba(236,72,153,0.18); box-shadow: 0 0 16px rgba(236,72,153,0.2); }
+  }
+  .ege-card-title { font-size: 15px; font-weight: 600; }
+  .ege-card-desc { font-size: 12px; color: #888; line-height: 1.4; }
+  .ege-word-box { background: #fff; border-radius: 14px; padding: 36px 20px; text-align: center; margin-bottom: 20px; border: 1px solid #e0e0e0; overflow: hidden; }
+  @media (max-width: 480px) { .ege-word-box { padding: 30px 10px; } }
+  .ege-word { font-size: clamp(22px, 7vw, 36px); font-weight: 600; line-height: 1.3; letter-spacing: 0; display: flex; flex-wrap: nowrap; justify-content: center; gap: 0px; white-space: nowrap; }
+  .ege-char { display: inline-block; padding: 3px 3px; border-radius: 6px; transition: all .15s; cursor: default; min-width: auto; text-align: center; color: inherit; }
+  .ege-char.vowel { cursor: pointer; border: 2px solid transparent; touch-action: manipulation; }
+  .ege-char.vowel:hover { background: #f0f0f0; border-color: #ccc; }
+  @media (prefers-color-scheme: dark) { .ege-char.vowel:hover { background: #222; border-color: #444; } }
+  .ege-char.vowel.selected { background: #111; color: #fff; border-color: #111; }
+  .ege-char.vowel.correct { background: #2e7d32; color: #fff; border-color: #2e7d32; }
+  .ege-char.vowel.wrong { background: #c62828; color: #fff; border-color: #c62828; }
+  .ege-char.vowel.dim { opacity: 0.25; }
+  .ege-category-tag { display: inline-block; font-size: 11px; color: #888; background: #f0f0f0; padding: 4px 12px; border-radius: 6px; margin-top: 14px; font-weight: 500; }
+  .ege-feedback { text-align: center; padding: 14px; border-radius: 12px; margin-bottom: 16px; font-size: 15px; font-weight: 600; opacity: 0; transform: translateY(-4px); transition: all .25s; }
+  .ege-feedback.show { opacity: 1; transform: translateY(0); }
+  .ege-feedback.ok { background: #e8f5e9; color: #2e7d32; }
+  .ege-feedback.err { background: #ffebee; color: #c62828; }
+  @media (prefers-color-scheme: dark) { .ege-feedback.ok { background: rgba(46,125,50,0.15); } .ege-feedback.err { background: rgba(198,40,40,0.15); } }
+  .ege-btn { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #e0e0e0; background: #fff; color: #111; font-size: 15px; font-weight: 600; cursor: pointer; transition: all .15s; margin-bottom: 8px; touch-action: manipulation; }
+  .ege-btn:hover { background: #f5f5f5; }
+  .ege-btn.primary { background: #111; color: #fff; border-color: #111; }
+  .ege-btn.primary:hover { opacity: 0.85; }
+  .ege-progress-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .ege-progress-bar { flex: 1; height: 6px; background: #e0e0e0; border-radius: 3px; overflow: hidden; }
+  .ege-progress-fill { height: 100%; background: #111; border-radius: 3px; transition: width .3s; }
+  .ege-progress-text { font-size: 12px; color: #888; font-variant-numeric: tabular-nums; min-width: 40px; text-align: right; font-weight: 500; }
+  .ege-result { text-align: center; padding: 32px 20px; }
+  .ege-result-score { font-size: 56px; font-weight: 700; line-height: 1; margin-bottom: 8px; }
+  .ege-result-label { font-size: 15px; color: #888; margin-bottom: 28px; }
+  .ege-result-detail { display: flex; justify-content: center; gap: 32px; margin-bottom: 28px; }
+  .ege-result-item { text-align: center; }
+  .ege-result-item .num { font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .ege-result-item .lbl { font-size: 12px; color: #888; margin-top: 4px; }
+  .ege-search { width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e0e0e0; background: #fff; color: #111; font-size: 15px; margin-bottom: 12px; outline: none; }
+  .ege-search:focus { border-color: #111; }
+  .ege-filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .ege-filter { padding: 6px 14px; border-radius: 8px; border: 1px solid #e0e0e0; background: #fff; color: #666; font-size: 12px; cursor: pointer; transition: all .15s; font-weight: 500; touch-action: manipulation; }
+  .ege-filter:hover { border-color: #111; color: #111; }
+  .ege-filter.active { background: #111; color: #fff; border-color: #111; }
+  .ege-dict-list { display: flex; flex-direction: column; gap: 6px; max-height: 480px; overflow-y: auto; padding-right: 4px; }
+  .ege-dict-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 12px; border: 1px solid #e0e0e0; background: #fff; transition: background .15s; }
+  .ege-dict-item:hover { background: #f9f9f9; }
+  .ege-dict-word { font-size: 17px; font-weight: 600; }
+  .ege-dict-word .stress { color: #c62828; font-weight: 700; }
+  .ege-dict-cat { font-size: 11px; color: #888; background: #f0f0f0; padding: 3px 10px; border-radius: 6px; font-weight: 500; }
+  .ege-dict-empty, .ege-empty-state { text-align: center; padding: 48px 20px; color: #888; font-size: 14px; }
+  .ege-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .ege-stat-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 18px; text-align: center; }
+  .ege-stat-box .val { font-size: 30px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.2; }
+  .ege-stat-box .lbl { font-size: 12px; color: #888; margin-top: 4px; font-weight: 500; }
+  .ege-mistakes-title { font-size: 16px; font-weight: 600; margin-bottom: 12px; margin-top: 4px; }
+  .ege-mistake-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 12px; border: 1px solid #e0e0e0; background: #fff; margin-bottom: 6px; }
+  .ege-mistake-word { font-size: 16px; font-weight: 500; }
+  .ege-mistake-count { font-size: 12px; color: #c62828; background: #ffebee; padding: 3px 10px; border-radius: 6px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  @media (prefers-color-scheme: dark) { .ege-mistake-count { background: rgba(198,40,40,0.15); } }
+  .ege-screen { display: none; animation: fadeIn .25s ease-out; }
+  .ege-screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .ege-card-icon { display: flex; align-items: center; justify-content: center; }
+  .ege-card-icon span { display: flex; align-items: center; justify-content: center; height: 100%; width: 100%; transform: translateY(-1px); }
+
+  /* === БИТВА === */
+  .ege-battle-score { display:flex; justify-content:center; align-items:center; gap:40px; margin-bottom:16px; }
+  .ege-battle-name { font-size:13px; color:#888; text-align:center; margin-bottom:4px; font-weight:500; }
+  .ege-battle-num { font-size:36px; font-weight:700; text-align:center; font-variant-numeric: tabular-nums; }
+  .ege-battle-num.p1 { color: #3b82f6; }
+  .ege-battle-num.p2 { color: #ef4444; }
+  .ege-battle-turn { text-align:center; font-size:15px; font-weight:600; color:#f59e0b; margin-bottom:14px; padding: 8px 16px; background: rgba(245,158,11,0.08); border-radius: 8px; display: inline-block; left: 50%; position: relative; transform: translateX(-50%); }
+  .ege-battle-hint { text-align:center; font-size:13px; color:#888; margin-bottom:12px; }
+  .ege-battle-versus { font-size:18px; font-weight:700; color:#ccc; }
+
+  /* === УМНОЕ ПОВТОРЕНИЕ === */
+  .ege-smart-legend { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; font-size:12px; color:#888; align-items:center; margin-bottom:24px; }
+  .ege-smart-legend span { display:flex; align-items:center; gap:4px; }
+  .ege-smart-dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+  .ege-smart-progress { display:flex; gap:3px; justify-content:center; margin-bottom:16px; flex-wrap:wrap; }
+  .ege-smart-pill { height:6px; border-radius:3px; transition: width .3s; min-width: 4px; }
+  .ege-smart-count { text-align:center; font-size:13px; color:#888; margin-bottom:16px; }
+  .ege-smart-count b { color: #111; font-weight:600; }
+  @media (prefers-color-scheme: dark) { .ege-smart-count b { color: #f5f5f7; } }
+
+  .ege-dict-list::-webkit-scrollbar { width: 4px; }
+  .ege-dict-list::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+  @media (prefers-color-scheme: dark) { .ege-dict-list::-webkit-scrollbar-thumb { background: #444; } }
+
+  /* === ДОФАМИНОВЫЕ УЛУЧШЕНИЯ === */
+  /* Анимированный фон */
+  .ege-bg-anim {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1; pointer-events: none; overflow: hidden;
+  }
+  .ege-bg-anim .orb {
+    position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.35;
+    animation: orbFloat 20s infinite ease-in-out;
+  }
+  .ege-bg-anim .orb:nth-child(1) { width: 300px; height: 300px; background: #a78bfa; top: -100px; left: -80px; animation-delay: 0s; }
+  .ege-bg-anim .orb:nth-child(2) { width: 250px; height: 250px; background: #f472b6; top: 40%; right: -60px; animation-delay: -5s; }
+  .ege-bg-anim .orb:nth-child(3) { width: 200px; height: 200px; background: #60a5fa; bottom: -60px; left: 30%; animation-delay: -10s; }
+  .ege-bg-anim .orb:nth-child(4) { width: 180px; height: 180px; background: #34d399; top: 10%; left: 50%; animation-delay: -15s; }
+  @keyframes orbFloat {
+    0%,100% { transform: translate(0,0) scale(1); }
+    33% { transform: translate(30px,-40px) scale(1.1); }
+    66% { transform: translate(-20px,20px) scale(0.95); }
+  }
+  @media (prefers-color-scheme: dark) { .ege-bg-anim .orb { opacity: 0.12; } }
+
+  /* Анимации букв */
+  @keyframes charPop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.35); }
+    100% { transform: scale(1); }
+  }
+  .ege-char.pop { animation: charPop 0.35s ease-out; }
+
+  @keyframes charShake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+  .ege-char.shake { animation: charShake 0.4s ease-in-out; }
+
+  @keyframes wordEnter {
+    from { opacity: 0; transform: scale(0.92) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .ege-word-box { animation: wordEnter 0.35s ease-out; }
+
+  /* Streak */
+  .ege-streak {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    font-size: 15px; font-weight: 700; color: #ea580c;
+    margin-bottom: 12px; opacity: 0; transform: translateY(-8px); transition: all 0.3s;
+  }
+  .ege-streak.show { opacity: 1; transform: translateY(0); }
+  .ege-streak .fire { font-size: 20px; }
+
+  /* Конфетти canvas */
+  #confettiCanvas {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 9999;
+  }
+
+  /* Улучшенные feedback */
+  .ege-feedback.ok { background: linear-gradient(135deg, #dcfce7, #bbf7d0); color: #166534; border: 1px solid #86efac; }
+  .ege-feedback.err { background: linear-gradient(135deg, #fee2e2, #fecaca); color: #991b1b; border: 1px solid #fca5a5; }
+  @media (prefers-color-scheme: dark) {
+    .ege-feedback.ok { background: linear-gradient(135deg, rgba(22,163,74,0.2), rgba(34,197,94,0.15)); border-color: rgba(74,222,128,0.3); }
+    .ege-feedback.err { background: linear-gradient(135deg, rgba(185,28,28,0.2), rgba(239,68,68,0.15)); border-color: rgba(248,113,113,0.3); }
+  }
+
+  /* Ачивка */
+  @keyframes badgeSlide {
+    0% { transform: translateX(-50%) translateY(30px); opacity: 0; }
+    100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+  }
+  @keyframes badgeFade {
+    0% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  }
+  .ege-badge {
+    position: fixed;
+    bottom: 110px;
+    left: 50%;
+    transform: translateX(-50%) translateY(30px);
+    opacity: 0;
+    pointer-events: none;
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    color: #fff;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    box-shadow: 0 12px 40px rgba(245,158,11,0.35), 0 2px 8px rgba(0,0,0,0.08);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+    max-width: 90vw;
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(4px);
+    transition: none;
+  }
+  .ege-badge.show {
+    animation: badgeSlide 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    pointer-events: auto;
+  }
+  .ege-badge.hide {
+    animation: badgeFade 0.3s ease-in forwards;
+  }
+
+  /* Карточки — hover эффект */
+  .ege-card { position: relative; overflow: hidden; }
+  .ege-card::after {
+    content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    transition: left 0.5s;
+  }
+  .ege-card:hover::after { left: 100%; }
+
+  /* Прогресс — градиент */
+  .ege-progress-fill {
+    background: linear-gradient(90deg, #111, #444);
+  }
+  @media (prefers-color-scheme: dark) {
+    .ege-progress-fill { background: linear-gradient(90deg, #f5f5f7, #a3a3a3); }
+  }
+
+  /* Пульсация правильной буквы */
+  @keyframes correctPulse {
+    0% { box-shadow: 0 0 0 0 rgba(46,125,50,0.5); }
+    70% { box-shadow: 0 0 0 12px rgba(46,125,50,0); }
+    100% { box-shadow: 0 0 0 0 rgba(46,125,50,0); }
+  }
+  .ege-char.vowel.correct { animation: correctPulse 0.8s ease-out; }
+</style>
+<base target="_blank">
+</head>
+<body>
+<div class="ege-bg-anim">
+  <div class="orb"></div><div class="orb"></div><div class="orb"></div><div class="orb"></div>
+</div>
+<canvas id="confettiCanvas"></canvas>
+<div class="ege-badge" id="egeBadge"></div>
+
+<div class="ege-app" id="egeApp">
+  <!-- HOME -->
+  <div class="ege-screen active" id="screenHome">
+    <div class="ege-header"><h1>Ударник</h1></div>
+    <div style="text-align:center;margin-bottom:20px;display:flex;flex-direction:column;align-items:center">
+      <div class="ege-app-icon">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs><filter id="iconBlur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="16"/></filter></defs>
+          <circle cx="20" cy="30" r="45" fill="#a78bfa" filter="url(#iconBlur)" opacity="0.5"/>
+          <circle cx="85" cy="50" r="40" fill="#f472b6" filter="url(#iconBlur)" opacity="0.45"/>
+          <circle cx="35" cy="85" r="35" fill="#60a5fa" filter="url(#iconBlur)" opacity="0.45"/>
+          <circle cx="65" cy="15" r="30" fill="#34d399" filter="url(#iconBlur)" opacity="0.4"/>
+        </svg>
+        <span class="icon-letter">У</span>
+      </div>
+    </div>
+    <p style="font-size:14px;color:#888;margin-bottom:20px;line-height:1.5;">
+      Тренажёр ударений по орфоэпическому словарю ФИПИ · 190 слов
+    </p>
+    <div class="ege-grid">
+      <div class="ege-card" data-action="modes">
+        <div class="ege-card-icon mode"><span>🎮</span></div>
+        <div class="ege-card-title">Режимы</div>
+        <div class="ege-card-desc">Битва и умное повторение</div>
+      </div>
+      <div class="ege-card" data-action="test">
+        <div class="ege-card-icon test"><span>📝</span></div>
+        <div class="ege-card-title">Экзамен</div>
+        <div class="ege-card-desc">10 слов — проверь себя</div>
+      </div>
+      <div class="ege-card" data-action="dict">
+        <div class="ege-card-icon dict"><span>📖</span></div>
+        <div class="ege-card-title">Словарь</div>
+        <div class="ege-card-desc">Все слова с ударениями</div>
+      </div>
+      <div class="ege-card" data-action="stats">
+        <div class="ege-card-icon stat"><span>📊</span></div>
+        <div class="ege-card-title">Статистика</div>
+        <div class="ege-card-desc">Прогресс и ошибки</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRAINING -->
+  <div class="ege-screen" id="screenTrain">
+    <div class="ege-header">
+      <button class="ege-back" data-action="home">← Назад</button>
+      <h1>Тренировка</h1>
+      <span style="width:60px"></span>
+    </div>
+    <div class="ege-progress-wrap">
+      <div class="ege-progress-bar"><div class="ege-progress-fill" id="trainProgress" style="width:0%"></div></div>
+      <span class="ege-progress-text" id="trainCounter">0/0</span>
+    </div>
+    <div class="ege-streak" id="trainStreak"><span class="fire">🔥</span><span id="trainStreakNum">0</span> подряд</div>
+    <div class="ege-word-box">
+      <div class="ege-word" id="trainWord"></div>
+      <div class="ege-category-tag" id="trainCat"></div>
+    </div>
+    <div class="ege-feedback" id="trainFeedback"></div>
+    <div id="trainControls">
+      <button class="ege-btn primary" id="trainNextBtn" data-action="nextTrain" style="display:none">Следующее слово</button>
+    </div>
+  </div>
+
+  <!-- TEST -->
+  <div class="ege-screen" id="screenTest">
+    <div class="ege-header">
+      <button class="ege-back" data-action="home">← Назад</button>
+      <h1>Экзамен</h1>
+      <span style="width:60px"></span>
+    </div>
+    <div class="ege-progress-wrap">
+      <div class="ege-progress-bar"><div class="ege-progress-fill" id="testProgress" style="width:0%"></div></div>
+      <span class="ege-progress-text" id="testCounter">1/10</span>
+    </div>
+    <div class="ege-streak" id="testStreak"><span class="fire">🔥</span><span id="testStreakNum">0</span> подряд</div>
+    <div class="ege-word-box">
+      <div class="ege-word" id="testWord"></div>
+      <div class="ege-category-tag" id="testCat"></div>
+    </div>
+    <div class="ege-feedback" id="testFeedback"></div>
+    <div id="testControls">
+      <button class="ege-btn primary" id="testNextBtn" data-action="nextTest" style="display:none">Далее</button>
+    </div>
+  </div>
+
+  <!-- TEST RESULT -->
+  <div class="ege-screen" id="screenResult">
+    <div class="ege-header">
+      <button class="ege-back" data-action="home">← На главную</button>
+      <h1>Результат</h1>
+      <span style="width:60px"></span>
+    </div>
+    <div class="ege-result">
+      <div class="ege-result-score" id="resultScore">0</div>
+      <div class="ege-result-label">баллов из 10</div>
+      <div class="ege-result-detail">
+        <div class="ege-result-item"><div class="num" id="resultCorrect" style="color:#2e7d32">0</div><div class="lbl">правильно</div></div>
+        <div class="ege-result-item"><div class="num" id="resultWrong" style="color:#c62828">0</div><div class="lbl">ошибок</div></div>
+      </div>
+      <button class="ege-btn primary" data-action="test">Пройти ещё раз</button>
+      <button class="ege-btn" data-action="home">На главную</button>
+    </div>
+  </div>
+
+  <!-- DICTIONARY -->
+  <div class="ege-screen" id="screenDict">
+    <div class="ege-header">
+      <button class="ege-back" data-action="home">← Назад</button>
+      <h1>Словарь</h1>
+      <span style="width:60px"></span>
+    </div>
+    <input class="ege-search" id="dictSearch" placeholder="Поиск слова..." oninput="renderDict()">
+    <div class="ege-filters" id="dictFilters"></div>
+    <div class="ege-dict-list" id="dictList"></div>
+  </div>
+
+  <!-- STATS -->
+  <div class="ege-screen" id="screenStats">
+    <div class="ege-header">
+      <button class="ege-back" data-action="home">← Назад</button>
+      <h1>Статистика</h1>
+      <span style="width:60px"></span>
+    </div>
+    <div class="ege-stat-grid">
+      <div class="ege-stat-box"><div class="val" id="statTotal">0</div><div class="lbl">всего ответов</div></div>
+      <div class="ege-stat-box"><div class="val" id="statCorrect">0</div><div class="lbl">правильно</div></div>
+      <div class="ege-stat-box"><div class="val" id="statAccuracy">0%</div><div class="lbl">точность</div></div>
+      <div class="ege-stat-box"><div class="val" id="statTests">0</div><div class="lbl">экзаменов</div></div>
+    </div>
+    <div class="ege-mistakes-title">Слова с ошибками</div>
+    <div id="mistakesList"></div>
+  </div>
+  <!-- MODES -->
+  <div class="ege-screen" id="screenModes">
+    <div class="ege-header">
+      <button class="ege-back" data-action="home">← Назад</button>
+      <h1>Режимы</h1>
+      <span style="width:60px"></span>
+    </div>
+    <div class="ege-grid">
+      <div class="ege-card" data-action="train">
+        <div class="ege-card-icon train"><span>🎯</span></div>
+        <div class="ege-card-title">Тренировка</div>
+        <div class="ege-card-desc">Учись в своём темпе</div>
+      </div>
+      <div class="ege-card" data-action="battle">
+        <div class="ege-card-icon train"><span>⚔️</span></div>
+        <div class="ege-card-title">Битва за 5</div>
+        <div class="ege-card-desc">1 на 1 на одном телефоне</div>
+      </div>
+      <div class="ege-card" data-action="smart">
+        <div class="ege-card-icon dict"><span>🧠</span></div>
+        <div class="ege-card-title">Умное повторение</div>
+        <div class="ege-card-desc">Забываешь? Мы напомним</div>
+      </div>
+      <div class="ege-card" data-action="marathon">
+        <div class="ege-card-icon meme"><span>🎭</span></div>
+        <div class="ege-card-title">Марафон</div>
+        <div class="ege-card-desc">30 дней — выучи все слова</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARATHON -->
+  <div class="ege-screen" id="screenMeme">
+    <div class="ege-header">
+      <button class="ege-back" data-action="home">← Назад</button>
+      <h1>Марафон</h1>
+      <span style="width:60px"></span>
+    </div>
+    <div id="marathonIntro" style="text-align:center;padding:8px 0 16px">
+      <div style="font-size:42px;margin-bottom:4px" id="marathonStreakIcon">🔥</div>
+      <div style="font-size:28px;font-weight:700" id="marathonStreakNum">0</div>
+      <div style="font-size:13px;color:#888">дней подряд</div>
+      <div style="font-size:14px;color:#888;margin-top:6px" id="marathonStatus">Норма: 10 слов в день</div>
+    </div>
+    <div id="marathonWeek" style="margin-bottom:16px"></div>
+    <div class="ege-progress-wrap" style="margin-bottom:12px">
+      <div class="ege-progress-bar"><div class="ege-progress-fill" id="marathonProgress" style="width:0%"></div></div>
+      <span class="ege-progress-text" id="marathonCounter">0/10</span>
+    </div>
+    <div class="ege-word-box" id="marathonWordBox">
+      <div class="ege-word" id="marathonWord"></div>
+      <div class="ege-category-tag" id="marathonCat"></div>
+    </div>
+    <div class="ege-feedback" id="marathonFeedback"></div>
+    <div id="marathonControls">
+      <button class="ege-btn primary" id="marathonNextBtn" data-action="nextMarathon" style="display:none">Далее</button>
+    </div>
+    <div id="marathonBadges" style="margin-top:16px;text-align:center"></div>
+  </div>
+
+  <!-- BATTLE -->
+  <div class="ege-screen" id="screenBattle">
+    <div class="ege-header">
+      <button class="ege-back" data-action="home">← Назад</button>
+      <h1>Битва за 5</h1>
+      <span style="width:60px"></span>
+    </div>
+    <div id="battleStart">
+      <div class="ege-result" style="padding:20px">
+        <div style="font-size:52px;margin-bottom:16px">⚔️</div>
+        <div style="font-size:18px;font-weight:600;margin-bottom:8px">1 на 1 на одном телефоне</div>
+        <div style="font-size:14px;color:#888;margin-bottom:24px;line-height:1.5">5 слов по очереди.<br>Кто наберёт больше баллов?</div>
+        <button class="ege-btn primary" data-action="startBattle">Начать битву</button>
+      </div>
+    </div>
+    <div id="battlePlay" style="display:none">
+      <div class="ege-battle-score">
+        <div><div class="ege-battle-name">Игрок 1</div><div class="ege-battle-num p1" id="battleScore1">0</div></div>
+        <div class="ege-battle-versus">VS</div>
+        <div><div class="ege-battle-name">Игрок 2</div><div class="ege-battle-num p2" id="battleScore2">0</div></div>
+      </div>
+      <div class="ege-battle-turn" id="battleTurn">Ход Игрока 1</div>
+      <div class="ege-word-box">
+        <div class="ege-word" id="battleWord"></div>
+        <div class="ege-category-tag" id="battleCat"></div>
+      </div>
+      <div class="ege-feedback" id="battleFeedback"></div>
+      <button class="ege-btn primary" id="battleNextBtn" data-action="nextBattle" style="display:none">Далее</button>
+    </div>
+    <div id="battleResult" style="display:none">
+      <div class="ege-result">
+        <div style="font-size:52px;margin-bottom:12px" id="battleResultIcon">🏆</div>
+        <div style="font-size:22px;font-weight:700;margin-bottom:6px" id="battleWinner"></div>
+        <div style="font-size:14px;color:#888;margin-bottom:24px" id="battleResultSub"></div>
+        <div class="ege-result-detail" style="gap:40px;margin-bottom:28px">
+          <div class="ege-result-item"><div class="num p1" id="battleFinal1" style="color:#3b82f6">0</div><div class="lbl">Игрок 1</div></div>
+          <div class="ege-result-item"><div class="num p2" id="battleFinal2" style="color:#ef4444">0</div><div class="lbl">Игрок 2</div></div>
+        </div>
+        <button class="ege-btn primary" data-action="startBattle">Сыграть ещё</button>
+        <button class="ege-btn" data-action="home">На главную</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SMART REPETITION -->
+  <div class="ege-screen" id="screenSmart">
+    <div class="ege-header">
+      <button class="ege-back" data-action="home">← Назад</button>
+      <h1>Умное повторение</h1>
+      <span style="width:60px"></span>
+    </div>
+    <div id="smartIntro" style="text-align:center;padding:20px">
+      <div style="font-size:52px;margin-bottom:16px">🧠</div>
+      <div style="font-size:15px;color:#888;line-height:1.6;margin-bottom:20px">
+        Приложение показывает слова, которые ты скоро забудешь.<br>
+        Чем чаще отвечаешь правильно — тем реже они появляются.
+      </div>
+      <div class="ege-smart-legend">
+        <span><span class="ege-smart-dot" style="background:#ef4444"></span> 10 мин</span>
+        <span><span class="ege-smart-dot" style="background:#f97316"></span> Час</span>
+        <span><span class="ege-smart-dot" style="background:#eab308"></span> День</span>
+        <span><span class="ege-smart-dot" style="background:#22c55e"></span> 3 дня</span>
+        <span><span class="ege-smart-dot" style="background:#3b82f6"></span> Неделя</span>
+      </div>
+      <div class="ege-smart-count" id="smartCount"></div>
+      <button class="ege-btn primary" onclick="startSmart()">Начать</button>
+    </div>
+    <div id="smartPlay" style="display:none">
+      <div class="ege-smart-progress" id="smartProgress"></div>
+      <div class="ege-smart-count" id="smartPlayCount"></div>
+      <div class="ege-word-box">
+        <div class="ege-word" id="smartWord"></div>
+        <div class="ege-category-tag" id="smartCat"></div>
+      </div>
+      <div class="ege-feedback" id="smartFeedback"></div>
+      <button class="ege-btn primary" id="smartNextBtn" data-action="nextSmart" style="display:none">Далее</button>
+    </div>
+    <div id="smartEmpty" style="display:none;text-align:center;padding:48px 20px">
+      <div style="font-size:52px;margin-bottom:16px">🎉</div>
+      <div style="font-size:18px;font-weight:600;margin-bottom:8px">Всё выучено!</div>
+      <div style="font-size:14px;color:#888;margin-bottom:8px;line-height:1.5" id="smartEmptyText">Следующее повторение позже</div>
+      <div class="ege-smart-progress" id="smartEmptyProgress" style="margin:16px 0"></div>
+      <button class="ege-btn" data-action="home">На главную</button>
+    </div>
+  </div>
+
+<script src="/words.js" defer></script>
+<script src="/app.js" defer></script>
+</body>
+</html>
