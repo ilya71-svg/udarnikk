@@ -290,7 +290,6 @@
   .ege-char.vowel.correct { animation: correctPulse 0.8s ease-out; }
 </style>
 <base target="_blank">
-<base target="_blank">
 </head>
 <body>
 <div class="ege-bg-anim">
@@ -854,8 +853,6 @@ const wordsData = [{"word":"аэропОрты","clean":"аэропорты","st
     }
   };
 
-
-
   // === MARATHON ===
   const MARATHON_DAILY = 10;
   let marathonQueue = [], marathonIndex = 0, marathonAnswered = false;
@@ -1297,9 +1294,8 @@ const wordsData = [{"word":"аэропОрты","clean":"аэропорты","st
     });
   }
 
-
 /* === ИНИЦИАЛИЗАЦИЯ ОБРАБОТЧИКОВ === */
-document.addEventListener('DOMContentLoaded', function() {
+function egeInitHandlers() {
   document.querySelectorAll('[data-action]').forEach(function(el) {
     el.addEventListener('click', function(e) {
       var action = el.getAttribute('data-action');
@@ -1322,7 +1318,15 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   });
-});
+  console.log('Udarink handlers attached (readyState: ' + document.readyState + ')');
+}
+// Скрипт стоит в конце body: если DOMContentLoaded уже прошёл (оптимизаторы типа Cloudflare Rocket Loader
+// задерживают inline-скрипты) — запускаем сразу, иначе ждём события как раньше.
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', egeInitHandlers);
+} else {
+  egeInitHandlers();
+}
 console.log('Udarink script loaded successfully');
 
 </script>
