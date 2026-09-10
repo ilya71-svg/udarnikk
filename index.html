@@ -16,15 +16,16 @@ window.addEventListener('load', function() {
     d.style.cssText = 'position:fixed;inset:0;background:rgba(255,255,255,0.97);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;font-family:-apple-system,Arial,sans-serif;color:#111';
     d.innerHTML = '<div style="font-size:44px;margin-bottom:12px">⚠️</div>' +
       '<div style="font-size:18px;font-weight:700;margin-bottom:8px">Страница загрузилась не полностью</div>' +
-      '<div style="font-size:14px;color:#666;max-width:440px;line-height:1.7;margin-bottom:18px">Соединение оборвалось до конца загрузки файла.<br>Частая причина — антивирус с проверкой защищённых соединений (Kaspersky, Avast, ESET, Dr.Web) или VPN.<br><br>1) Обновите страницу: Ctrl+Shift+R<br>2) Если не помогло — приостановите защиту антивируса / отключите VPN<br>3) Или откройте сайт через мобильный интернет</div>' +
+      '<div style="font-size:14px;color:#666;max-width:440px;line-height:1.7;margin-bottom:18px">Не удалось запустить тренажёр. Обновите страницу или попробуйте открыть её позже. Если ошибка повторяется, сообщите об этом автору приложения.</div>' +
       '<button onclick="location.reload()" style="padding:12px 26px;font-size:15px;font-weight:600;border:none;border-radius:12px;background:#111;color:#fff;cursor:pointer">Обновить страницу</button>';
     document.body.appendChild(d);
   }, 2500);
 });
 </script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Ударник — тренажёр ударений: короткие тесты, повторение ошибок и ежедневная практика.">
 <title>Ударник — ЕГЭ Задание 4</title>
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -307,6 +308,45 @@ window.addEventListener('load', function() {
     100% { box-shadow: 0 0 0 0 rgba(46,125,50,0); }
   }
   .ege-char.vowel.correct { animation: correctPulse 0.8s ease-out; }
+
+  button.ege-card { font: inherit; color: inherit; width: 100%; }
+  .ege-card-desc { display: block; }
+  .ege-start { margin-bottom: 16px; min-height: 48px; }
+  .ege-word-hint { text-align: center; color: #666; font-size: 13px; margin: 0 0 12px; }
+  button.ege-char { appearance: none; background: transparent; color: inherit; font: inherit; line-height: inherit; padding: 3px 2px; border-radius: 6px; flex-shrink: 0; }
+  .ege-word { justify-content: flex-start; width: max-content; max-width: 100%; margin-inline: auto; }
+  .ege-word-box { overflow-x: auto; }
+  .ege-char { flex-shrink: 0; }
+  .ege-char:disabled { cursor: default; opacity: 1; }
+  .ege-char:disabled.dim { opacity: .45; }
+  button:focus-visible, input:focus-visible { outline: 3px solid #6366f1; outline-offset: 3px; }
+  .ege-btn:disabled { opacity: .65; cursor: default; }
+  .ege-feedback:not(.show) { visibility: hidden; }
+  .ege-category-tag { white-space: normal; }
+  .ege-dict-item { flex-wrap: wrap; gap: 6px; }
+  .ege-word-context { flex-basis: 100%; font-size: 13px; color: #666; }
+  .ege-mistake-item { gap: 12px; }
+  .ege-mistake-count { flex-shrink: 0; }
+  #marathonWeek { display: flex; justify-content: center; gap: 5px; }
+  .ege-day { padding: 8px 4px; flex: 1; text-align: center; border-radius: 8px; font-size: 12px; background: #eee; color: #555; }
+  .ege-day.today { outline: 2px solid #6366f1; }
+  .ege-day.done { background: #dcfce7; color: #166534; }
+  .ege-smart-progress { flex-wrap: nowrap; width: 100%; }
+  .ege-smart-pill { flex-basis: 0; }
+  @media (prefers-color-scheme: dark) {
+    .ege-card, .ege-word-box, .ege-dict-item, .ege-mistake-item, .ege-stat-box, .ege-search, .ege-filter, .ege-btn { background: #1a1a1a; color: #f5f5f7; border-color: #444; }
+    .ege-btn.primary, .ege-filter.active { background: #e5e7eb; color: #111; }
+    .ege-card:hover, .ege-btn:hover, .ege-filter:hover { background: #333; color: #fff; }
+    .ege-word-hint, .ege-word-context, .ege-card-desc { color: #aaa; }
+    .ege-category-tag, .ege-dict-cat { background: #292929; color: #bbb; }
+    .ege-day { background: #292929; color: #ddd; }
+    .ege-day.done { background: #14532d; color: #dcfce7; }
+    .ege-progress-fill { background: #a5b4fc; }
+    .ege-dict-word .stress { color: #fca5a5; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
 </style>
 <base target="_blank">
 </head>
@@ -334,29 +374,30 @@ window.addEventListener('load', function() {
       </div>
     </div>
     <p style="font-size:14px;color:#888;margin-bottom:20px;line-height:1.5;">
-      Тренажёр ударений по орфоэпическому словарю ФИПИ · 190 слов
+      Тренажёр ударений · 190 учебных карточек
     </p>
+    <button type="button" class="ege-btn primary ege-start" data-action="train">Начать тренировку</button>
     <div class="ege-grid">
-      <div class="ege-card" data-action="modes">
-        <div class="ege-card-icon mode"><span>🎮</span></div>
-        <div class="ege-card-title">Режимы</div>
-        <div class="ege-card-desc">Битва и умное повторение</div>
-      </div>
-      <div class="ege-card" data-action="test">
-        <div class="ege-card-icon test"><span>📝</span></div>
-        <div class="ege-card-title">Экзамен</div>
-        <div class="ege-card-desc">10 слов — проверь себя</div>
-      </div>
-      <div class="ege-card" data-action="dict">
-        <div class="ege-card-icon dict"><span>📖</span></div>
-        <div class="ege-card-title">Словарь</div>
-        <div class="ege-card-desc">Все слова с ударениями</div>
-      </div>
-      <div class="ege-card" data-action="stats">
-        <div class="ege-card-icon stat"><span>📊</span></div>
-        <div class="ege-card-title">Статистика</div>
-        <div class="ege-card-desc">Прогресс и ошибки</div>
-      </div>
+      <button type="button" class="ege-card" data-action="modes">
+        <span class="ege-card-icon mode"><span>🎮</span></span>
+        <span class="ege-card-title">Режимы</span>
+        <span class="ege-card-desc">Битва и умное повторение</span>
+      </button>
+      <button type="button" class="ege-card" data-action="test">
+        <span class="ege-card-icon test"><span>📝</span></span>
+        <span class="ege-card-title">Экзамен</span>
+        <span class="ege-card-desc">10 слов — проверь себя</span>
+      </button>
+      <button type="button" class="ege-card" data-action="dict">
+        <span class="ege-card-icon dict"><span>📖</span></span>
+        <span class="ege-card-title">Словарь</span>
+        <span class="ege-card-desc">Все слова с ударениями</span>
+      </button>
+      <button type="button" class="ege-card" data-action="stats">
+        <span class="ege-card-icon stat"><span>📊</span></span>
+        <span class="ege-card-title">Статистика</span>
+        <span class="ege-card-desc">Прогресс и ошибки</span>
+      </button>
     </div>
   </div>
 
@@ -430,7 +471,7 @@ window.addEventListener('load', function() {
       <h1>Словарь</h1>
       <span style="width:60px"></span>
     </div>
-    <input class="ege-search" id="dictSearch" placeholder="Поиск слова..." oninput="renderDict()">
+    <input class="ege-search" id="dictSearch" placeholder="Поиск слова..." aria-label="Поиск слова">
     <div class="ege-filters" id="dictFilters"></div>
     <div class="ege-dict-list" id="dictList"></div>
   </div>
@@ -448,7 +489,9 @@ window.addEventListener('load', function() {
       <div class="ege-stat-box"><div class="val" id="statAccuracy">0%</div><div class="lbl">точность</div></div>
       <div class="ege-stat-box"><div class="val" id="statTests">0</div><div class="lbl">экзаменов</div></div>
     </div>
-    <div class="ege-mistakes-title">Слова с ошибками</div>
+    <button class="ege-btn primary" id="repeatMistakesBtn" data-action="mistakes">Повторить мои ошибки</button>
+    <p class="ege-word-hint">Ответы всех режимов, включая обоих игроков в битве. История ошибок сохраняется после отработки.</p>
+    <div class="ege-mistakes-title">История ошибок</div>
     <div id="mistakesList"></div>
   </div>
   <!-- MODES -->
@@ -459,26 +502,26 @@ window.addEventListener('load', function() {
       <span style="width:60px"></span>
     </div>
     <div class="ege-grid">
-      <div class="ege-card" data-action="train">
-        <div class="ege-card-icon train"><span>🎯</span></div>
-        <div class="ege-card-title">Тренировка</div>
-        <div class="ege-card-desc">Учись в своём темпе</div>
-      </div>
-      <div class="ege-card" data-action="battle">
-        <div class="ege-card-icon train"><span>⚔️</span></div>
-        <div class="ege-card-title">Битва за 5</div>
-        <div class="ege-card-desc">1 на 1 на одном телефоне</div>
-      </div>
-      <div class="ege-card" data-action="smart">
-        <div class="ege-card-icon dict"><span>🧠</span></div>
-        <div class="ege-card-title">Умное повторение</div>
-        <div class="ege-card-desc">Забываешь? Мы напомним</div>
-      </div>
-      <div class="ege-card" data-action="marathon">
-        <div class="ege-card-icon meme"><span>🎭</span></div>
-        <div class="ege-card-title">Марафон</div>
-        <div class="ege-card-desc">30 дней — выучи все слова</div>
-      </div>
+      <button type="button" class="ege-card" data-action="train">
+        <span class="ege-card-icon train"><span>🎯</span></span>
+        <span class="ege-card-title">Тренировка</span>
+        <span class="ege-card-desc">Учись в своём темпе</span>
+      </button>
+      <button type="button" class="ege-card" data-action="battle">
+        <span class="ege-card-icon train"><span>⚔️</span></span>
+        <span class="ege-card-title">Битва за 5</span>
+        <span class="ege-card-desc">1 на 1 на одном телефоне</span>
+      </button>
+      <button type="button" class="ege-card" data-action="smart">
+        <span class="ege-card-icon dict"><span>🧠</span></span>
+        <span class="ege-card-title">Умное повторение</span>
+        <span class="ege-card-desc">Повторяй с интервалами</span>
+      </button>
+      <button type="button" class="ege-card" data-action="marathon">
+        <span class="ege-card-icon meme"><span>🎭</span></span>
+        <span class="ege-card-title">Марафон</span>
+        <span class="ege-card-desc">10 карточек в день · весь словарь по очереди</span>
+      </button>
     </div>
   </div>
 
@@ -565,18 +608,12 @@ window.addEventListener('load', function() {
     <div id="smartIntro" style="text-align:center;padding:20px">
       <div style="font-size:52px;margin-bottom:16px">🧠</div>
       <div style="font-size:15px;color:#888;line-height:1.6;margin-bottom:20px">
-        Приложение показывает слова, которые ты скоро забудешь.<br>
-        Чем чаще отвечаешь правильно — тем реже они появляются.
+        Повторяй слова по расписанию: от 10 минут до недели.<br>
+        Чем чаще отвечаешь правильно — тем реже они появляются. После ошибки слово вернётся через 10 минут.
       </div>
-      <div class="ege-smart-legend">
-        <span><span class="ege-smart-dot" style="background:#ef4444"></span> 10 мин</span>
-        <span><span class="ege-smart-dot" style="background:#f97316"></span> Час</span>
-        <span><span class="ege-smart-dot" style="background:#eab308"></span> День</span>
-        <span><span class="ege-smart-dot" style="background:#22c55e"></span> 3 дня</span>
-        <span><span class="ege-smart-dot" style="background:#3b82f6"></span> Неделя</span>
-      </div>
+      <div class="ege-smart-legend"><span><span class="ege-smart-dot" style="background:#ef4444"></span> Новые / повторить</span><span><span class="ege-smart-dot" style="background:#f97316"></span> 10 мин</span><span><span class="ege-smart-dot" style="background:#eab308"></span> Час</span><span><span class="ege-smart-dot" style="background:#22c55e"></span> День</span><span><span class="ege-smart-dot" style="background:#3b82f6"></span> 3 дня</span><span><span class="ege-smart-dot" style="background:#a855f7"></span> Неделя</span></div>
       <div class="ege-smart-count" id="smartCount"></div>
-      <button class="ege-btn primary" onclick="startSmart()">Начать</button>
+      <button class="ege-btn primary" data-action="startSmart">Начать</button>
     </div>
     <div id="smartPlay" style="display:none">
       <div class="ege-smart-progress" id="smartProgress"></div>
@@ -590,14 +627,15 @@ window.addEventListener('load', function() {
     </div>
     <div id="smartEmpty" style="display:none;text-align:center;padding:48px 20px">
       <div style="font-size:52px;margin-bottom:16px">🎉</div>
-      <div style="font-size:18px;font-weight:600;margin-bottom:8px">Всё выучено!</div>
+      <div id="smartEmptyTitle" style="font-size:18px;font-weight:600;margin-bottom:8px">На сейчас всё!</div>
       <div style="font-size:14px;color:#888;margin-bottom:8px;line-height:1.5" id="smartEmptyText">Следующее повторение позже</div>
       <div class="ege-smart-progress" id="smartEmptyProgress" style="margin:16px 0"></div>
+      <button class="ege-btn primary" data-action="startSmart">Проверить доступные карточки</button>
       <button class="ege-btn" data-action="home">На главную</button>
     </div>
   </div>
 
-<script src="/words.js" defer></script>
-<script src="/app.js" defer></script>
+<script src="./words.js" defer></script>
+<script src="./app.js" defer></script>
 </body>
 </html>
