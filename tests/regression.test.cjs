@@ -29,6 +29,18 @@ function app(seed = {}, instant = '2026-09-09T09:00:00Z') {
   vm.runInContext(source, context);
   return {run: code=>vm.runInContext(code,context), get, setTime: date=>{now=new Date(date).getTime();}, storage};
 }
+test('dictionary search accepts ё, е, uppercase and a combining stress mark', () => {
+  const a = app();
+  for (const query of ['ЗАСЕЛЁННЫЙ', 'заселенный', 'заселе\u0301нный']) {
+    a.get('dictSearch').value = query;
+    a.run('renderDict()');
+    assert.equal(a.get('dictList').children.length, 1, query);
+  }
+  a.get('dictSearch').value = 'несуществующееслово';
+  a.run('renderDict()');
+  assert.equal(a.get('dictList').children.length, 0);
+});
+
 test('190 stable unique cards, valid stress/vowels and disambiguated contexts', () => {
   const a = app();
   assert.equal(a.run('wordsData.length'), 190);

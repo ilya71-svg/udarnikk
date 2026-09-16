@@ -637,17 +637,20 @@ function egeSet(key, val) {
 
   // DICTIONARY
   function renderDict() {
-    const search = document.getElementById('dictSearch').value.toLowerCase().trim();
+    const normalizeSearch = value => value.toLowerCase().normalize('NFC').replace(/ё/g, 'е').replace(/\u0301/g, '').trim();
+    const search = normalizeSearch(document.getElementById('dictSearch').value);
     const filterWrap = document.getElementById('dictFilters');
     if (!filterWrap.children.length) {
       const allBtn = document.createElement('button');
       allBtn.className = 'ege-filter active';
+      allBtn.setAttribute('aria-pressed', 'true');
       allBtn.textContent = 'Все';
       allBtn.onclick = () => { currentFilter = 'all'; updateFilterUI(); renderDict(); };
       filterWrap.appendChild(allBtn);
       categories.forEach(cat => {
         const btn = document.createElement('button');
         btn.className = 'ege-filter';
+        btn.setAttribute('aria-pressed', 'false');
         btn.textContent = cat;
         btn.onclick = () => { currentFilter = cat; updateFilterUI(); renderDict(); };
         filterWrap.appendChild(btn);
@@ -657,12 +660,12 @@ function egeSet(key, val) {
     list.innerHTML = '';
     let filtered = wordsData;
     if (currentFilter !== 'all') filtered = filtered.filter(w => w.category === currentFilter);
-    if (search) filtered = filtered.filter(w => w.clean.includes(search));
+    if (search) filtered = filtered.filter(w => normalizeSearch(w.word).includes(search));
     if (!filtered.length) { list.innerHTML = '<div class="ege-dict-empty">Ничего не найдено</div>'; return; }
     filtered.forEach(w => {
       const item = document.createElement('div');
       item.className = 'ege-dict-item';
-      const wordHtml = w.clean.split('').map((ch, i) => i === w.stress ? '<span class="stress">' + ch + '</span>' : ch).join('');
+      const wordHtml = w.word.toLowerCase().split('').map((ch, i) => i === w.stress ? '<span class="stress">' + ch + '</span>' : ch).join('');
       item.innerHTML = '<div class="ege-dict-word">' + wordHtml + '</div><div class="ege-dict-cat">' + w.category + '</div>';
       if (w.context) { const context = document.createElement('div'); context.className = 'ege-word-context'; context.textContent = w.context; item.appendChild(context); }
       list.appendChild(item);
@@ -670,7 +673,9 @@ function egeSet(key, val) {
   }
   function updateFilterUI() {
     document.querySelectorAll('.ege-filter').forEach(btn => {
-      btn.classList.toggle('active', btn.textContent === (currentFilter === 'all' ? 'Все' : currentFilter));
+      const active = btn.textContent === (currentFilter === 'all' ? 'Все' : currentFilter);
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-pressed', String(active));
     });
   }
 

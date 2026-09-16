@@ -1,0 +1,7 @@
+source/
+tests/
+*.md
+*.zip
+serve.cjs
+polish.cjs
+.git/
